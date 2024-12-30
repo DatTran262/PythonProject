@@ -1,17 +1,15 @@
 from PyQt6.QtCore import Qt, QRect, QUrl
-from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QLineEdit, QGraphicsDropShadowEffect, QPushButton, QMessageBox
-from PyQt6.QtGui import QPixmap, QFont, QColor, QIcon, QDesktopServices
-import sys
-import MySQLdb as mdb
+from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton, QGraphicsDropShadowEffect, QMessageBox, QApplication
+from PyQt6.QtGui import QFont, QColor, QDesktopServices, QIcon
 
-
-class Window(QWidget):
-    def __init__(self):
-        super().__init__()
+class LoginView(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.setGeometry(1500, 200, 450, 550)
         self.setWindowTitle("LogIn")
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
         self.initUI()
         self.center()
 
@@ -58,13 +56,12 @@ class Window(QWidget):
         self.labelNotice.setGeometry(QRect(115, 290, 200, 45))
         self.labelNotice.setStyleSheet("color: red;")
 
-        buttonLogIn = QPushButton(self)
-        buttonLogIn.setGeometry(QRect(115, 340, 200, 45))
-        buttonLogIn.setObjectName("buttonLogin")
-        buttonLogIn.setStyleSheet(self.getLoginButtonStyle())
-        buttonLogIn.setText("L o g I n")
-        buttonLogIn.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
-        buttonLogIn.clicked.connect(self.login)
+        self.buttonLogIn = QPushButton(self)
+        self.buttonLogIn.setObjectName("buttonLogin")
+        self.buttonLogIn.setStyleSheet(self.getLoginButtonStyle())
+        self.buttonLogIn.setText("L o g I n")
+        self.buttonLogIn.setGeometry(QRect(115, 340, 200, 45))
+        self.buttonLogIn.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
 
         label5 = QLabel(self)
         label5.setGeometry(QRect(115, 385, 200, 45))
@@ -106,6 +103,9 @@ class Window(QWidget):
                 padding-top: 5px;
             }
         """
+
+    def show_error(self, message):
+        QMessageBox.critical(self, "Error", message)
 
     def createSocialButtons(self):
         icons = [
@@ -170,24 +170,6 @@ class Window(QWidget):
     def closeApp(self):
         QApplication.quit()
 
-    def login(self):
-        u = self.txtUser.text()
-        p = self.txtPassword.text()
-        try:
-            db = mdb.connect(host='localhost', user='root', passwd='', database='loginwidget')
-            cursor = db.cursor()
-            cursor.execute("SELECT * FROM user_list WHERE user=%s AND pass=%s", (u, p))
-            result = cursor.fetchone()
-            if result:
-                self.labelNotice.setText(None)
-            else:
-                self.labelNotice.setText("Invalid Username or Password!")
-        except mdb.Error as e:
-            QMessageBox.critical(self, "Database Error", f"Error: {e}")
-        finally:
-            if db:
-                db.close()
-
     def center(self):
         # Lấy kích thước của màn hình
         screen = QApplication.primaryScreen()
@@ -201,8 +183,3 @@ class Window(QWidget):
 
         # Di chuyển cửa sổ tới vị trí đã tính
         self.move(x, y)
-
-app = QApplication(sys.argv)
-window = Window()
-window.show()
-sys.exit(app.exec())
