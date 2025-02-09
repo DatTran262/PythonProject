@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt, QRect, QUrl
-from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QLineEdit, QGraphicsDropShadowEffect, QPushButton, QMessageBox
+from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QLineEdit, QGraphicsDropShadowEffect, QPushButton, QMessageBox, QHBoxLayout, QStackedWidget
 from PyQt6.QtGui import QPixmap, QFont, QColor, QIcon, QDesktopServices
 import sys
 import MySQLdb as mdb
@@ -8,7 +8,7 @@ import MySQLdb as mdb
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        self.setGeometry(1500, 200, 450, 550)
+        self.setGeometry(1100, 200, 450, 550)
         self.setWindowTitle("LogIn")
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -51,28 +51,23 @@ class Window(QWidget):
         label4.setText("Log In")
 
     def createLoginComponents(self):
-        self.txtUser = self.createLineEdit(115, 180, " User Name", 10)
-        self.txtPassword = self.createLineEdit(115, 260, " Password", 10, echoMode=QLineEdit.EchoMode.Password)
+        self.txtUser = self.createLineEdit(115, 160, " User Name", 10)
+        self.txtPassword = self.createLineEdit(115, 240, " Password", 10, echoMode=QLineEdit.EchoMode.Password)
 
         self.labelNotice = QLabel(self)
-        self.labelNotice.setGeometry(QRect(115, 290, 200, 45))
+        self.labelNotice.setGeometry(QRect(115, 200, 200, 45))
         self.labelNotice.setStyleSheet("color: red;")
 
         buttonLogIn = QPushButton(self)
-        buttonLogIn.setGeometry(QRect(115, 340, 200, 45))
+        buttonLogIn.setGeometry(QRect(115, 310, 200, 45))
         buttonLogIn.setObjectName("buttonLogin")
         buttonLogIn.setStyleSheet(self.getLoginButtonStyle())
         buttonLogIn.setText("L o g I n")
         buttonLogIn.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
         buttonLogIn.clicked.connect(self.login)
 
-        label5 = QLabel(self)
-        label5.setGeometry(QRect(115, 385, 200, 45))
-        label5.setText("Forgot your User Name or Password?")
-        label5.setStyleSheet("""
-            color: rgba(255, 255, 255, 140);
-        """)
-        label5.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.newUser(115, 355, "Forgot Password?", "Click Here")
+        self.newUser(115, 385, "New User?", "Sign Up")
 
     def createLineEdit(self, x, y, placeholder, fontSize, echoMode=None):
         lineEdit = QLineEdit(self)
@@ -179,7 +174,7 @@ class Window(QWidget):
             cursor.execute("SELECT * FROM user_list WHERE user=%s AND pass=%s", (u, p))
             result = cursor.fetchone()
             if result:
-                self.labelNotice.setText(None)
+                self.labelNotice.setText("Login successful!")
             else:
                 self.labelNotice.setText("Invalid Username or Password!")
         except mdb.Error as e:
@@ -187,6 +182,60 @@ class Window(QWidget):
         finally:
             if db:
                 db.close()
+
+    def newUser(self, x, y, txtFirst, txtSecond):
+        # Tạo một widget cha với kích thước cố định
+        parentWidget = QWidget(self)
+        parentWidget.setGeometry(QRect(x, y, 200, 45))
+        # parentWidget.setStyleSheet("background-color: rgba(0, 0, 0, 50); border-radius: 5px;")
+        parentWidget.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        # Sử dụng QVBoxLayout để căn giữa QLabel và QPushButton
+        layout = QHBoxLayout(parentWidget) # type: ignore
+        layout.setContentsMargins(0, 0, 0, 0)  # Loại bỏ padding giữa layout và widget
+        layout.setSpacing(5)  # Khoảng cách giữa QLabel và 
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Căn giữa layout
+
+        # Tạo QLabel
+        labelNewUser = QLabel(txtFirst, parentWidget)
+        labelNewUser.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Căn giữa text
+        labelNewUser.setStyleSheet("""
+            QLabel {
+                color: rgba(255, 255, 255, 140);
+                background-color: transparent;
+            }
+        """)
+
+        # Tạo QPushButton
+        buttonSignUp = QPushButton(txtSecond, parentWidget)
+        buttonSignUp.setStyleSheet("""
+            QPushButton {
+                color: rgba(255, 255, 255, 140);
+                background-color: transparent;
+                border: none;
+            }
+            QPushButton:hover {
+                color: rgba(0, 200, 255, 255);
+            }
+            QPushButton:pressed {
+                color: rgba(0, 255, 100, 255);
+            }
+        """)
+
+        # Thêm QLabel và QPushButton vào layout
+        layout.addWidget(labelNewUser)
+        layout.addWidget(buttonSignUp)
+
+        if txtSecond == "Sign Up":
+            buttonSignUp.clicked.connect(self.register)
+
+    def register(self):
+        from RegisterWidget import Window as rw
+        self.stacked_widget = QStackedWidget()
+        self.stacked_widget.addWidget(self)
+        self.stacked_widget.addWidget(rw())
+        self.registerWindow = rw()
+        self.registerWindow.show()
 
     def center(self):
         # Lấy kích thước của màn hình
@@ -202,7 +251,8 @@ class Window(QWidget):
         # Di chuyển cửa sổ tới vị trí đã tính
         self.move(x, y)
 
-app = QApplication(sys.argv)
-window = Window()
-window.show()
-sys.exit(app.exec())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(app.exec())

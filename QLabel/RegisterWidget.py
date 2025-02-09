@@ -13,7 +13,7 @@ class Window(QWidget):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.initUI()
-        # self.center()
+        self.center()
 
     def initUI(self):
         self.createBackgroundLabels()
@@ -56,16 +56,33 @@ class Window(QWidget):
         self.txtConfirmPassword = self.createLineEdit(115, 290, " Confirm Password", 10, echoMode=QLineEdit.EchoMode.Password)
 
         self.labelNotice = QLabel(self)
-        self.labelNotice.setGeometry(QRect(115, 330, 200, 45))
+        self.labelNotice.setGeometry(QRect(115, 310, 200, 45))
         self.labelNotice.setStyleSheet("color: red;")
 
         buttonRegister = QPushButton(self)
-        buttonRegister.setGeometry(QRect(115, 370, 200, 45))
+        buttonRegister.setGeometry(QRect(115, 350, 200, 45))
         buttonRegister.setObjectName("buttonRegister")
         buttonRegister.setStyleSheet(self.getRegisterButtonStyle())
         buttonRegister.setText("R e g i s t e r")
         buttonRegister.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
         buttonRegister.clicked.connect(self.register)
+
+        btnSigIn = QPushButton("S i g n I n?",self)
+        btnSigIn.setGeometry(QRect(180, 405, 70, 20))
+        btnSigIn.setStyleSheet("""
+            QPushButton {
+                color: rgba(255, 255, 255, 140);
+                background-color: transparent;
+                border: none;
+            }
+            QPushButton:hover {
+                color: rgba(0, 200, 255, 255);
+            }
+            QPushButton:pressed {
+                color: rgba(0, 255, 100, 255);
+            }
+        """)
+        btnSigIn.clicked.connect(self.signin)
 
     def createLineEdit(self, x, y, placeholder, fontSize, echoMode=None):
         lineEdit = QLineEdit(self)
@@ -212,7 +229,13 @@ class Window(QWidget):
         # Di chuyển cửa sổ tới vị trí đã tính
         self.move(x, y)
 
-app = QApplication(sys.argv)
-window = Window()
-window.show()
-sys.exit(app.exec())
+    def signin(self):
+        self.close()
+        from LoginWidget import Window as lw
+        self.lw = lw()
+        self.lw.show()
+
+# app = QApplication(sys.argv)
+# window = Window()
+# window.show()
+# sys.exit(app.exec())
