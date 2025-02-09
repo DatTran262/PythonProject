@@ -1,6 +1,6 @@
-from PyQt6.QtCore import Qt, QRect, QUrl
+from PyQt6.QtCore import Qt, QRect, QUrl, QDir
 from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QLineEdit, QGraphicsDropShadowEffect, QPushButton, QMessageBox, QHBoxLayout, QStackedWidget
-from PyQt6.QtGui import QPixmap, QFont, QColor, QIcon, QDesktopServices
+from PyQt6.QtGui import QFont, QColor, QIcon, QDesktopServices
 import sys
 import MySQLdb as mdb
 
@@ -24,7 +24,7 @@ class Window(QWidget):
     def createBackgroundLabels(self):
         label1 = QLabel(self)
         label1.setGeometry(30, 30, 370, 480)
-        label1.setStyleSheet("border-image: url(C:/Users/trand/PycharmProjects/PythonProject/Images/background.jpg);"
+        label1.setStyleSheet(f"border-image: url({QDir.current().filePath('QLabel/Images/background.jpg')});"
                              "border-radius: 20px;")
         label1.setScaledContents(True)
         label1.setGraphicsEffect(
@@ -104,10 +104,10 @@ class Window(QWidget):
 
     def createSocialButtons(self):
         icons = [
-            "C:/Users/trand/PycharmProjects/PythonProject/Images/iconF.svg",  # Facebook
-            "C:/Users/trand/PycharmProjects/PythonProject/Images/iconY.svg",  # YouTube
-            "C:/Users/trand/PycharmProjects/PythonProject/Images/iconT.svg",  # Twitter
-            "C:/Users/trand/PycharmProjects/PythonProject/Images/iconIn.svg"  # LinkedIn
+            QDir.current().filePath("QLabel/Images/iconF.svg"),  # Facebook
+            QDir.current().filePath("QLabel/Images/iconY.svg"),  # YouTube
+            QDir.current().filePath("QLabel/Images/iconT.svg"),  # Twitter
+            QDir.current().filePath("QLabel/Images/iconIn.svg")  # LinkedIn
         ]
         urls = [
             "https://www.facebook.com",  # URL của Facebook
@@ -146,7 +146,7 @@ class Window(QWidget):
     def createExitButton(self):
         btnExit = QPushButton(self)
         btnExit.setGeometry(370, 30, 30, 30)
-        btnExit.setIcon(QIcon("C:/Users/trand/PycharmProjects/PythonProject/Images/iconExit.svg"))
+        btnExit.setIcon(QIcon(QDir.current().filePath("QLabel/Images/iconExit.svg")))
         btnExit.setStyleSheet("""
             QPushButton{
                 border-top-right-radius: 20px;
@@ -251,8 +251,8 @@ class Window(QWidget):
         # Di chuyển cửa sổ tới vị trí đã tính
         self.move(x, y)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = Window()
-    window.show()
-    sys.exit(app.exec())
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#     window = Window()
+#     window.show()
+#     sys.exit(app.exec())
