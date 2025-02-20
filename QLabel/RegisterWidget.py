@@ -4,6 +4,9 @@ from PyQt6.QtGui import QFont, QColor, QIcon, QDesktopServices
 import sys
 import MySQLdb as mdb
 
+def QssLoader(file_path: str) -> str:
+    with open(file_path, "r") as file:
+        return file.read()
 
 class Window(QWidget):
     def __init__(self):
@@ -22,33 +25,31 @@ class Window(QWidget):
         self.createExitButton()
 
     def createBackgroundLabels(self):
-        label1 = QLabel(self)
-        label1.setGeometry(30, 30, 370, 480)
-        label1.setStyleSheet(f"border-image: url({QDir.current().filePath("QLabel/Images/background.jpg")});"
+        self.label1 = QLabel(self)
+        self.label1.setGeometry(30, 30, 370, 480)
+        self.label1.setStyleSheet(f"border-image: url({QDir.current().filePath("QLabel/Images/background.jpg")});"
                              "border-radius: 20px;")
-        label1.setScaledContents(True)
-        label1.setGraphicsEffect(
+        self.label1.setScaledContents(True)
+        self.label1.setGraphicsEffect(
             QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0, color=QColor(234, 221, 186, 100)))
 
-        label2 = QLabel(self)
-        label2.setGeometry(30, 30, 370, 480)
-        label2.setStyleSheet("background-color: qlineargradient(spread: pad, x1:0, y1:0, y2:0.715909, "
-                             "stop:0 rgba(0, 0, 0, 9), stop:0.375 rgba(0, 0, 0, 50), "
-                             "stop:0.835227 rgba(0, 0, 0, 75));"
-                             "border-radius: 20px;")
+        self.label2 = QLabel(self)
+        self.label2.setObjectName("label2Background")
+        self.label2.setGeometry(30, 30, 370, 480)
+        self.label2.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
 
-        label3 = QLabel(self)
-        label3.setGeometry(40, 60, 350, 450)
-        label3.setStyleSheet("background-color: rgba(0, 0, 0, 75);"
-                             "border-radius: 15px;")
-        label3.setGraphicsEffect(
+        self.label3 = QLabel(self)
+        self.label3.setObjectName("label3Background")
+        self.label3.setGeometry(40, 60, 350, 450)
+        self.label3.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.label3.setGraphicsEffect(
             QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0, color=QColor(105, 221, 132, 100)))
 
-        label4 = QLabel(self)
-        label4.setGeometry(QRect(165, 90, 100, 45))
-        label4.setFont(QFont("Times New Roman", 20, QFont.Weight.Bold))
-        label4.setStyleSheet("color: rgba(255, 255, 255, 210);")
-        label4.setText("Register")
+        self.label4 = QLabel(self)
+        self.label4.setGeometry(QRect(165, 90, 100, 45))
+        self.label4.setFont(QFont("Times New Roman", 20, QFont.Weight.Bold))
+        self.label4.setStyleSheet("color: rgba(255, 255, 255, 210);")
+        self.label4.setText("Register")
 
     def createRegisterComponents(self):
         self.txtUser = self.createLineEdit(115, 160, " Email Address or Phone", 10)
@@ -59,63 +60,30 @@ class Window(QWidget):
         self.labelNotice.setGeometry(QRect(115, 310, 200, 45))
         self.labelNotice.setStyleSheet("color: red;")
 
-        buttonRegister = QPushButton(self)
-        buttonRegister.setGeometry(QRect(115, 350, 200, 45))
-        buttonRegister.setObjectName("buttonRegister")
-        buttonRegister.setStyleSheet(self.getRegisterButtonStyle())
-        buttonRegister.setText("R e g i s t e r")
-        buttonRegister.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
-        buttonRegister.clicked.connect(self.register)
+        self.buttonRegister = QPushButton(self)
+        self.buttonRegister.setGeometry(QRect(115, 350, 200, 45))
+        self.buttonRegister.setObjectName("buttonLogin")
+        self.buttonRegister.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.buttonRegister.setText("R e g i s t e r")
+        self.buttonRegister.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
+        self.buttonRegister.clicked.connect(self.register)
 
-        btnSigIn = QPushButton("S i g n I n?",self)
-        btnSigIn.setGeometry(QRect(180, 405, 70, 20))
-        btnSigIn.setStyleSheet("""
-            QPushButton {
-                color: rgba(255, 255, 255, 140);
-                background-color: transparent;
-                border: none;
-            }
-            QPushButton:hover {
-                color: rgba(0, 200, 255, 255);
-            }
-            QPushButton:pressed {
-                color: rgba(0, 255, 100, 255);
-            }
-        """)
-        btnSigIn.clicked.connect(self.signin)
+        self.btnSigIn = QPushButton("S i g n I n?",self)
+        self.btnSigIn.setObjectName("btnTransferSignUp")
+        self.btnSigIn.setGeometry(QRect(180, 405, 70, 20))
+        self.btnSigIn.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.btnSigIn.clicked.connect(self.signin)
 
     def createLineEdit(self, x, y, placeholder, fontSize, echoMode=None):
-        lineEdit = QLineEdit(self)
-        lineEdit.setGeometry(QRect(x, y, 200, 30))
-        lineEdit.setFont(QFont("Times New Roman", fontSize))
-        lineEdit.setStyleSheet("background-color: rgba(0, 0, 0, 0);"
-                               "border: none;"
-                               "border-bottom: 2px solid rgba(155, 168, 182, 255);"
-                               "color: rgba(255, 255, 255, 255);"
-                               "padding-bottom: 7px;")
-        lineEdit.setPlaceholderText(placeholder)
+        self.lineEdit = QLineEdit(self)
+        self.lineEdit.setObjectName("lineEditLogin")
+        self.lineEdit.setGeometry(QRect(x, y, 200, 30))
+        self.lineEdit.setFont(QFont("Times New Roman", fontSize))
+        self.lineEdit.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.lineEdit.setPlaceholderText(placeholder)
         if echoMode:
-            lineEdit.setEchoMode(echoMode)
-        return lineEdit
-
-    def getRegisterButtonStyle(self):
-        return """
-            QPushButton#buttonRegister {
-                background-color: qlineargradient(spread: pad, x1:0, y1:0.505682, x2:1, y2:0.477,
-                                                  stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
-                color: rgba(255, 255, 255, 210);
-                border-radius: 5px;
-            }
-            QPushButton#buttonRegister:hover {
-                background-color: qlineargradient(spread: pad, x1:0, y1:0.505682, x2:1, y2:0.477,
-                                                  stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
-            }
-            QPushButton#buttonRegister:pressed {
-                background-color: rgba(105, 118, 132, 200);
-                padding-left: 5px;
-                padding-top: 5px;
-            }
-        """
+            self.lineEdit.setEchoMode(echoMode)
+        return self.lineEdit
 
     def createSocialButtons(self):
         icons = [
@@ -138,10 +106,10 @@ class Window(QWidget):
         QDesktopServices.openUrl(QUrl(url))
 
     def createSocialButton(self, x, y, iconPath, url):
-        btn = QPushButton(self)
-        btn.setGeometry(QRect(x, y, 40, 40))
-        btn.setIcon(QIcon(iconPath))
-        btn.setStyleSheet("""
+        self.btn = QPushButton(self)
+        self.btn.setGeometry(QRect(x, y, 40, 40))
+        self.btn.setIcon(QIcon(iconPath))
+        self.btn.setStyleSheet("""
             QPushButton{
                 border-radius: 20px;
                 background-color: rgba(105, 198, 207, 0.7);
@@ -156,13 +124,13 @@ class Window(QWidget):
                 background-color: rgba(125, 218, 227, 0.7);
             }
         """)
-        btn.clicked.connect(lambda: self.openSocialApp(url))
+        self.btn.clicked.connect(lambda: self.openSocialApp(url))
 
     def createExitButton(self):
-        btnExit = QPushButton(self)
-        btnExit.setGeometry(370, 30, 30, 30)
-        btnExit.setIcon(QIcon(QDir.current().filePath("QLabel/Images/iconExit.svg")))
-        btnExit.setStyleSheet("""
+        self.btnExit = QPushButton(self)
+        self.btnExit.setGeometry(370, 30, 30, 30)
+        self.btnExit.setIcon(QIcon(QDir.current().filePath("QLabel/Images/iconExit.svg")))
+        self.btnExit.setStyleSheet("""
             QPushButton{
                 border-top-right-radius: 20px;
                 background-color: transparent;
@@ -175,7 +143,7 @@ class Window(QWidget):
                 padding-top: 5px;
             }
         """)
-        btnExit.clicked.connect(self.closeApp)
+        self.btnExit.clicked.connect(self.closeApp)
 
     def closeApp(self):
         QApplication.quit()

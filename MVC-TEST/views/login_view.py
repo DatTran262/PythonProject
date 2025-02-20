@@ -1,14 +1,8 @@
-from PyQt6.QtCore import Qt, QRect, QUrl, QDir
-from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QLineEdit, QGraphicsDropShadowEffect, QPushButton, QMessageBox, QHBoxLayout, QStackedWidget
-from PyQt6.QtGui import QFont, QColor, QIcon, QDesktopServices
-import sys
-import MySQLdb as mdb
+from PyQt6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QGraphicsDropShadowEffect, QHBoxLayout
+from PyQt6.QtGui import QFont, QColor, QIcon
+from PyQt6.QtCore import QRect, QDir, Qt, QDesktopServices, QUrl, QStackedWidget, QApplication
 
-def QssLoader(file_path: str) -> str:
-    with open(file_path, "r") as file:
-        return file.read()
-
-class Window(QWidget):
+class LoginView(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(1100, 200, 450, 550)
@@ -34,14 +28,16 @@ class Window(QWidget):
             QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0, color=QColor(234, 221, 186, 100)))
 
         self.label2 = QLabel(self)
-        self.label2.setObjectName("label2Background")
         self.label2.setGeometry(30, 30, 370, 480)
-        self.label2.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.label2.setStyleSheet("background-color: qlineargradient(spread: pad, x1:0, y1:0, y2:0.715909, "
+                             "stop:0 rgba(0, 0, 0, 9), stop:0.375 rgba(0, 0, 0, 50), "
+                             "stop:0.835227 rgba(0, 0, 0, 75));"
+                             "border-radius: 20px;")
 
         self.label3 = QLabel(self)
-        self.label3.setObjectName("label3Background")
         self.label3.setGeometry(40, 60, 350, 450)
-        self.label3.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.label3.setStyleSheet("background-color: rgba(0, 0, 0, 75);"
+                             "border-radius: 15px;")
         self.label3.setGraphicsEffect(
             QGraphicsDropShadowEffect(blurRadius=25, xOffset=0, yOffset=0, color=QColor(105, 221, 132, 100)))
 
@@ -62,24 +58,45 @@ class Window(QWidget):
         self.buttonLogIn = QPushButton(self)
         self.buttonLogIn.setGeometry(QRect(115, 310, 200, 45))
         self.buttonLogIn.setObjectName("buttonLogin")
-        self.buttonLogIn.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.buttonLogIn.setStyleSheet(self.getLoginButtonStyle())
         self.buttonLogIn.setText("L o g I n")
         self.buttonLogIn.setFont(QFont("Times New Roman", 15, QFont.Weight.Bold))
-        self.buttonLogIn.clicked.connect(self.login)
 
         self.newUser(115, 355, "Forgot Password?", "Click Here")
         self.newUser(115, 385, "New User?", "Sign Up")
 
     def createLineEdit(self, x, y, placeholder, fontSize, echoMode=None):
         self.lineEdit = QLineEdit(self)
-        self.lineEdit.setObjectName("lineEditLogin")
         self.lineEdit.setGeometry(QRect(x, y, 200, 30))
         self.lineEdit.setFont(QFont("Times New Roman", fontSize))
-        self.lineEdit.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.lineEdit.setStyleSheet("background-color: rgba(0, 0, 0, 0);"
+                               "border: none;"
+                               "border-bottom: 2px solid rgba(155, 168, 182, 255);"
+                               "color: rgba(255, 255, 255, 255);"
+                               "padding-bottom: 7px;")
         self.lineEdit.setPlaceholderText(placeholder)
         if echoMode:
             self.lineEdit.setEchoMode(echoMode)
         return self.lineEdit
+
+    def getLoginButtonStyle(self):
+        return """
+            QPushButton#buttonLogin {
+                background-color: qlineargradient(spread: pad, x1:0, y1:0.505682, x2:1, y2:0.477,
+                                                  stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
+                color: rgba(255, 255, 255, 210);
+                border-radius: 5px;
+            }
+            QPushButton#buttonLogin:hover {
+                background-color: qlineargradient(spread: pad, x1:0, y1:0.505682, x2:1, y2:0.477,
+                                                  stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
+            }
+            QPushButton#buttonLogin:pressed {
+                background-color: rgba(105, 118, 132, 200);
+                padding-left: 5px;
+                padding-top: 5px;
+            }
+        """
 
     def createSocialButtons(self):
         icons = [
@@ -95,104 +112,109 @@ class Window(QWidget):
             "https://www.linkedin.com"  # URL của LinkedIn
         ]
         x_positions = [115, 165, 215, 265]
-        for x, iconPath, url in zip(x_positions, icons, urls):
-            self.createSocialButton(x, 435, iconPath, url)
+        for x, iconPath, self.url in zip(x_positions, icons, urls):
+            self.createSocialButton(x, 435, iconPath, self.url)
 
     def openSocialApp(self, url):
         QDesktopServices.openUrl(QUrl(url))
 
     def createSocialButton(self, x, y, iconPath, url):
         self.btn = QPushButton(self)
-        self.btn.setObjectName("btnSocial")
         self.btn.setGeometry(QRect(x, y, 40, 40))
         self.btn.setIcon(QIcon(iconPath))
-        self.btn.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
-        self.btn.clicked.connect(lambda: self.openSocialApp(url))
+        self.btn.setStyleSheet("""
+            QPushButton{
+                border-radius: 20px;
+                background-color: rgba(105, 198, 207, 0.7);
+                border: 1px solid rgba(185, 225, 207, 0.7);
+            }
+            QPushButton::hover{
+                background-color: rgba(155, 248, 255, 0.7);
+            }
+            QPushButton::pressed{
+                padding-left: 5px;
+                padding-top: 5px;
+                background-color: rgba(125, 218, 227, 0.7);
+            }
+        """)
 
     def createExitButton(self):
         self.btnExit = QPushButton(self)
-        self.btnExit.setObjectName("btnExit")
         self.btnExit.setGeometry(370, 30, 30, 30)
         self.btnExit.setIcon(QIcon(QDir.current().filePath("QLabel/Images/iconExit.svg")))
-        self.btnExit.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.btnExit.setStyleSheet("""
+            QPushButton{
+                border-top-right-radius: 20px;
+                background-color: transparent;
+            }
+            QPushButton::hover{
+                background-color: rgba(110, 141, 255, 0.7);
+            }
+            QPushButton::pressed{
+                padding-left: 5px;
+                padding-top: 5px;
+            }
+        """)
         self.btnExit.clicked.connect(self.closeApp)
 
     def closeApp(self):
         QApplication.quit()
 
-    def login(self):
-        u = self.txtUser.text()
-        p = self.txtPassword.text()
-        try:
-            db = mdb.connect(host='localhost', user='root', passwd='', database='loginwidget')
-            cursor = db.cursor()
-            cursor.execute("SELECT * FROM user_list WHERE user=%s AND pass=%s", (u, p))
-            result = cursor.fetchone()
-            if result:
-                self.labelNotice.setText("Login successful!")
-            else:
-                self.labelNotice.setText("Invalid Username or Password!")
-        except mdb.Error as e:
-            QMessageBox.critical(self, "Database Error", f"Error: {e}")
-        finally:
-            if db:
-                db.close()
-
     def newUser(self, x, y, txtFirst, txtSecond):
-        # Tạo một widget cha với kích thước cố định
-        parentWidget = QWidget(self)
-        parentWidget.setGeometry(QRect(x, y, 200, 45))
-        # parentWidget.setStyleSheet("background-color: rgba(0, 0, 0, 50); border-radius: 5px;")
-        parentWidget.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.parentWidget = QWidget(self)
+        self.parentWidget.setGeometry(QRect(x, y, 200, 45))
+        self.parentWidget.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        # Sử dụng QVBoxLayout để căn giữa QLabel và QPushButton
-        layout = QHBoxLayout(parentWidget) # type: ignore
-        layout.setContentsMargins(0, 0, 0, 0)  # Loại bỏ padding giữa layout và widget
-        layout.setSpacing(5)  # Khoảng cách giữa QLabel và 
-        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Căn giữa layout
+        self.layout = QHBoxLayout(self.parentWidget)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(5)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Tạo QLabel
-        self.labelNewUser = QLabel(txtFirst, parentWidget)
-        self.labelNewUser.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Căn giữa text
-        self.labelNewUser.setObjectName("labelNewUser")
-        self.labelNewUser.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.labelNewUser = QLabel(txtFirst, self.parentWidget)
+        self.labelNewUser.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.labelNewUser.setStyleSheet("""
+            QLabel {
+                color: rgba(255, 255, 255, 140);
+                background-color: transparent;
+            }
+        """)
 
-        # Tạo QPushButton
-        self.buttonSignUp = QPushButton(txtSecond, parentWidget)
-        self.buttonSignUp.setObjectName("btnTransferSignUp")
-        self.buttonSignUp.setStyleSheet(QssLoader(QDir.current().filePath("QLabel/styles.qss")))
+        self.buttonSignUp = QPushButton(txtSecond, self.parentWidget)
+        self.buttonSignUp.setStyleSheet("""
+            QPushButton {
+                color: rgba(255, 255, 255, 140);
+                background-color: transparent;
+                border: none;
+            }
+            QPushButton:hover {
+                color: rgba(0, 200, 255, 255);
+            }
+            QPushButton:pressed {
+                color: rgba(0, 255, 100, 255);
+            }
+        """)
 
-        # Thêm QLabel và QPushButton vào layout
-        layout.addWidget(self.labelNewUser)
-        layout.addWidget(self.buttonSignUp)
+        self.layout.addWidget(self.labelNewUser)
+        self.layout.addWidget(self.buttonSignUp)
 
         if txtSecond == "Sign Up":
             self.buttonSignUp.clicked.connect(self.register)
 
     def register(self):
-        from RegisterWidget import Window as rw
+        from views.register_view import RegisterView
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self)
-        self.stacked_widget.addWidget(rw())
-        self.registerWindow = rw()
+        self.stacked_widget.addWidget(RegisterView())
+        self.registerWindow = RegisterView()
         self.registerWindow.show()
 
     def center(self):
-        # Lấy kích thước của màn hình
         screen = QApplication.primaryScreen()
         screenGeometry = screen.availableGeometry()
         screenWidth, screenHeight = screenGeometry.width(), screenGeometry.height()
 
-        # Tính toán vị trí căn giữa cửa sổ
         windowWidth, windowHeight = self.width(), self.height()
         x = (screenWidth - windowWidth) // 2
         y = (screenHeight - windowHeight) // 2
 
-        # Di chuyển cửa sổ tới vị trí đã tính
         self.move(x, y)
-
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     window = Window()
-#     window.show()
-#     sys.exit(app.exec())

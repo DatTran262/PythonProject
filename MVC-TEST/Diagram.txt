@@ -1,0 +1,22 @@
+mvc-login-register-app
+└── mvc-login-register-app
+    ├── models
+    │   ├── __init__.py
+    │   └── user_model.py
+    ├── views
+    │   ├── __init__.py
+    │   ├── login_view.py
+    │   ├── register_view.py
+    │   └── main_view.py
+    ├── controllers
+    │   ├── __init__.py
+    │   ├── login_controller.py
+    │   ├── register_controller.py
+    │   └── main_controller.py
+    ├── resources
+    │   ├── images
+    │   │   └── (place your image files here)
+    │   └── styles
+    │       └── style.css
+    ├── main.py
+    └── README.md
