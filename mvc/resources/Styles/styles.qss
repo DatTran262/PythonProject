@@ -1,0 +1,92 @@
+#btnTransferSignUp, #btnForgotPassword {
+    color: rgba(255, 255, 255, 140);
+    background-color: transparent;
+    border: none;
+}
+#btnTransferSignUp:hover, #btnForgotPassword:hover {
+    color: rgba(0, 200, 255, 255);
+}
+#btnTransferSignUp:pressed, #btnForgotPassword:pressed {
+    color: rgba(0, 255, 100, 255);
+}
+
+QLabel#labelNewUser {
+    color: rgba(255, 255, 255, 140);
+    background-color: transparent;
+}
+
+QPushButton#btnExit{
+    border-top-right-radius: 20px;
+    background-color: transparent;
+}
+QPushButton#btnExit::hover{
+    background-color: rgba(110, 141, 255, 0.7);
+}
+QPushButton#btnExit::pressed{
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+QLabel#label2Background {
+    background-color: qlineargradient(spread: pad, x1:0, y1:0, y2:0.715909, 
+    stop:0 rgba(0, 0, 0, 9), stop:0.375 rgba(0, 0, 0, 50), 
+    stop:0.835227 rgba(0, 0, 0, 75));
+    border-radius: 20px;
+}
+
+QLabel#label3Background {
+    background-color: rgba(0, 0, 0, 75);
+    border-radius: 15px;
+}
+
+QLineEdit#lineEditLogin {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-bottom: 2px solid rgba(155, 168, 182, 255);
+    color: rgba(255, 255, 255, 255);
+    padding-bottom: 7px;
+}
+
+QPushButton#buttonLogin {
+    background-color: qlineargradient(spread: pad, x1:0, y1:0.505682, x2:1, y2:0.477,
+                                        stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
+    color: rgba(255, 255, 255, 210);
+    border-radius: 5px;
+}
+QPushButton#buttonLogin:hover {
+    background-color: qlineargradient(spread: pad, x1:0, y1:0.505682, x2:1, y2:0.477,
+                                        stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
+}
+QPushButton#buttonLogin:pressed {
+    background-color: rgba(105, 118, 132, 200);
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+QPushButton#btnSocial{
+    border-radius: 20px;
+    background-color: rgba(105, 198, 207, 0.7);
+    border: 1px solid rgba(185, 225, 207, 0.7);
+}
+QPushButton#btnSocial::hover{
+    background-color: rgba(155, 248, 255, 0.7);
+}
+QPushButton#btnSocial::pressed{
+    padding-left: 5px;
+    padding-top: 5px;
+    background-color: rgba(125, 218, 227, 0.7);
+}
+
+QPushButton#btnSocial2{
+    border-radius: 20px;
+    background-color: rgba(105, 198, 207, 0.7);
+    border: 1px solid rgba(185, 225, 207, 0.7);
+}
+QPushButton#btnSocial2::hover{
+    background-color: rgba(155, 248, 255, 0.7);
+}
+QPushButton#btnSocial2::pressed{
+    padding-left: 5px;
+    padding-top: 5px;
+    background-color: rgba(125, 218, 227, 0.7);
+}
