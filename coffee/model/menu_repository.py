@@ -34,11 +34,11 @@ class MenuRepository:
     def delete_item(item_id):
         """Delete menu item"""
         db = Database()
-        result = db.execute_query(
+        # Try to delete and check if any rows were actually deleted
+        return db.execute_query(
             "DELETE FROM menu_items WHERE id = %s",
             (item_id,)
         )
-        return result is not None
 
     @staticmethod
     def get_all_items():

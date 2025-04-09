@@ -51,15 +51,26 @@ class MenuView(QWidget):
 
     def clear_and_load(self, items):
         """Clear current menu items and load new ones"""
-        # Clear current items
-        while self.grid_layout.count():
-            child = self.grid_layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
-                
+        # Remove all widgets from grid layout
+        for i in reversed(range(self.grid_layout.count())):
+            widget = self.grid_layout.itemAt(i).widget()
+            if widget:
+                widget.setParent(None)
+                widget.deleteLater()
+        
         # Reset grid position
         self.current_row = 0
         self.current_col = 0
+        
+        # Create a new content widget
+        old_content = self.findChild(QScrollArea).takeWidget()
+        if old_content:
+            old_content.deleteLater()
+            
+        content_widget = QWidget()
+        self.grid_layout = QGridLayout(content_widget)
+        self.grid_layout.setSpacing(10)
+        self.findChild(QScrollArea).setWidget(content_widget)
         
         # Add new items
         for item in items:

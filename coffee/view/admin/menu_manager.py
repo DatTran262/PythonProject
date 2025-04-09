@@ -60,9 +60,12 @@ class MenuManagerView(QWidget):
         
         # Description input
         self.description_input = QLineEdit()
-        self.description_input.setPlaceholderText('Mô tả')
+        self.description_input.setPlaceholderText('Mô tả món')
         layout.addWidget(QLabel('Mô tả:'))
         layout.addWidget(self.description_input)
+
+        # Add some spacing
+        layout.addSpacing(10)
         
         # Add buttons
         btn_layout = QHBoxLayout()
@@ -91,11 +94,29 @@ class MenuManagerView(QWidget):
         
     def get_item_data(self):
         """Get item data from inputs"""
+        # Get and validate the name
+        name = self.name_input.text().strip()
+        if not name:
+            return None
+            
+        # Get other fields
+        price = self.price_input.value()
+        category = self.category_input.currentText().strip()
+        description = self.description_input.text().strip()
+        
+        # Price validation
+        if price <= 0:
+            return None
+            
+        # Category validation
+        if not category:
+            return None
+            
         return {
-            'name': self.name_input.text().strip(),
-            'price': self.price_input.value(),
-            'category': self.category_input.currentText().strip(),
-            'description': self.description_input.text().strip()
+            'name': name,
+            'price': price,
+            'category': category,
+            'description': description
         }
         
     def clear_inputs(self):

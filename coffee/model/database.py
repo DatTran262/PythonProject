@@ -76,13 +76,21 @@ class Database:
 
                 with self.connection.cursor() as cursor:
                     cursor.execute(query, params or ())
+                    
                     if query.strip().upper().startswith(('SELECT', 'SHOW')):
                         result = cursor.fetchall()
                         print(f"Query executed successfully: {query}")
                         return result
+                        
+                    # For non-SELECT queries, check if any rows were affected
                     self.connection.commit()
-                    print(f"Query executed successfully: {query}")
-                    return cursor.rowcount
+                    affected_rows = cursor.rowcount
+                    if affected_rows > 0:
+                        print(f"Query executed successfully: {query}, {affected_rows} rows affected")
+                        return True
+                    else:
+                        print(f"Query executed but no rows affected: {query}")
+                        return False
                     
             except pymysql.Error as e:
                 print(f"Query error (attempt {attempt + 1}): {e}")

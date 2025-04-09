@@ -1,5 +1,4 @@
 from .database import Database
-from .sample_data import create_sample_menu_items
 from config import DEFAULT_ADMIN, DEFAULT_STAFF
 
 def create_schema():
@@ -101,7 +100,6 @@ def initialize_database():
     if db.connect():
         create_schema()
         create_default_users()
-        create_sample_menu_items()
         print("Database initialization completed")
         return True
     print("Database initialization failed")

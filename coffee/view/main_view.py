@@ -85,11 +85,15 @@ class MainWindow(QMainWindow):
             return
             
         from controller.menu_manager_ctrl import MenuManagerController
-        manager_view = MenuManagerView(None)
-        manager_controller = MenuManagerController(manager_view)
-        manager_view.controller = manager_controller
+        # Tạo controller trước
+        manager_controller = MenuManagerController(None)
+        # Tạo view với controller đã có sẵn
+        manager_view = MenuManagerView(manager_controller)
+        # Gán view cho controller
+        manager_controller.view = manager_view
+        # Kết nối signal và load dữ liệu
         manager_view.menu_updated.connect(self.handle_menu_update)
-        manager_view.load_items()  # Load items after controller is set
+        manager_view.load_items()
         manager_view.show()
         
     def handle_menu_update(self, items):
