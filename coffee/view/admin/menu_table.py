@@ -8,38 +8,37 @@ class MenuTable(QTableWidget):
         self.init_ui()
         
     def init_ui(self):
-        """Initialize the table"""
-        self.setHorizontalHeaderLabels(['ID', 'Tên', 'Giá', 'Danh mục', 'Thao tác'])
+        """Khởi tạo bảng"""
+        self.setHorizontalHeaderLabels(['Tên', 'Giá', 'Danh mục', 'Thao tác'])
         header = self.horizontalHeader()
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         
     def load_items(self, items):
-        """Load menu items into table"""
-        # Clear existing items
+        """Tải danh sách món vào bảng"""
+        # Xóa các món hiện tại
         self.clearContents()
         self.setRowCount(0)
         for item in items:
             row = self.rowCount()
             self.insertRow(row)
             
-            # Add item data
-            self.setItem(row, 0, QTableWidgetItem(str(item['id'])))
-            self.setItem(row, 1, QTableWidgetItem(item['name']))
-            self.setItem(row, 2, QTableWidgetItem(f"${item['price']:.2f}"))
-            self.setItem(row, 3, QTableWidgetItem(item['category']))
+            # Thêm thông tin món
+            self.setItem(row, 0, QTableWidgetItem(item['name']))
+            self.setItem(row, 1, QTableWidgetItem(f"${item['price']:.2f}"))
+            self.setItem(row, 2, QTableWidgetItem(item['category']))
             
-            # Add delete button
+            # Thêm nút xóa
             delete_btn = QPushButton('Xóa')
             delete_btn.setStyleSheet(DANGER_BUTTON)
             delete_btn.clicked.connect(lambda ch, i=item['id']: self.confirm_delete(i))
-            self.setCellWidget(row, 4, delete_btn)
+            self.setCellWidget(row, 3, delete_btn)
             
-    def confirm_delete(self, item_id):
-        """Confirm and delete menu item"""
+    def confirm_delete(self, item_data):
+        """Xác nhận và xóa món"""
         if not self.parent().controller:
             return
             
-        # Confirm deletion
+        # Hiển thị hộp thoại xác nhận
         reply = QMessageBox.question(
             self,
             'Xác nhận xóa',
@@ -49,14 +48,14 @@ class MenuTable(QTableWidget):
         )
         
         if reply == QMessageBox.StandardButton.Yes:
-            success = self.parent().controller.delete_menu_item(item_id)
+            success = self.parent().controller.delete_menu_item(item_data)
             if success:
-                # Find and remove row
+                # Tìm và xóa dòng khỏi bảng
                 for row in range(self.rowCount()):
-                    if self.item(row, 0).text() == str(item_id):
+                    if self.item(row, 0).text() == str(item_data):
                         self.removeRow(row)
                         break
-                # Get updated items and signal menu update
+                # Lấy danh sách món mới và phát tín hiệu cập nhật
                 items = self.parent().controller.get_menu_items()
                 self.parent().menu_updated.emit(items)
                 QMessageBox.information(self, 'Thành công', 'Đã xóa món.')
@@ -64,14 +63,13 @@ class MenuTable(QTableWidget):
                 QMessageBox.critical(self, 'Lỗi', 'Không thể xóa món.')
 
     def get_selected_item(self):
-        """Get selected menu item data"""
+        """Lấy thông tin món được chọn trong bảng"""
         row = self.currentRow()
         if row < 0:
             return None
             
         return {
-            'id': int(self.item(row, 0).text()),
-            'name': self.item(row, 1).text(),
-            'price': float(self.item(row, 2).text().replace('$', '')),
-            'category': self.item(row, 3).text()
+            'name': self.item(row, 0).text(),
+            'price': float(self.item(row, 1).text().replace('$', '')),
+            'category': self.item(row, 2).text()
         }

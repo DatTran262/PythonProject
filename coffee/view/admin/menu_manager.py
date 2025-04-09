@@ -6,8 +6,8 @@ from .menu_table import MenuTable
 from .menu_events import MenuEventHandler
 
 class MenuManagerView(QWidget):
-    """Menu manager view for admin"""
-    menu_updated = pyqtSignal(list)  # Signal includes menu items
+    """Giao diện quản lý menu dành cho admin"""
+    menu_updated = pyqtSignal(list)  # Tín hiệu chứa danh sách món được cập nhật
     
     def __init__(self, controller):
         super().__init__()
@@ -17,26 +17,26 @@ class MenuManagerView(QWidget):
         self.init_ui()
         
     def init_ui(self):
-        """Initialize the user interface"""
+        """Khởi tạo giao diện người dùng"""
         layout = QVBoxLayout(self)
         
-        # Title
+        # Tiêu đề
         title = QLabel('QUẢN LÝ THỰC ĐƠN')
         title.setStyleSheet(HEADER_LABEL)
         layout.addWidget(title)
         
-        # Form layout
+        # Form nhập liệu
         input_layout = QVBoxLayout()
         self.setup_inputs(input_layout)
         layout.addLayout(input_layout)
         
-        # Add table
+        # Thêm bảng danh sách
         self.table = MenuTable(self)
         self.table.itemClicked.connect(self.event_handler.handle_item_click)
         layout.addWidget(self.table)
         
     def setup_inputs(self, layout):
-        """Setup input fields"""
+        """Thiết lập các trường nhập liệu"""
         # Name input
         self.name_input = QLineEdit()
         self.name_input.setPlaceholderText('Tên món')
@@ -73,7 +73,7 @@ class MenuManagerView(QWidget):
         layout.addLayout(btn_layout)
         
     def setup_buttons(self, layout):
-        """Setup action buttons"""
+        """Thiết lập các nút thao tác"""
         self.add_button = QPushButton('Thêm món')
         self.add_button.setStyleSheet(PRIMARY_BUTTON)
         self.add_button.clicked.connect(self.event_handler.add_item)
@@ -93,22 +93,22 @@ class MenuManagerView(QWidget):
         layout.addWidget(self.delete_button)
         
     def get_item_data(self):
-        """Get item data from inputs"""
-        # Get and validate the name
+        """Lấy dữ liệu từ các trường nhập liệu"""
+        # Lấy và kiểm tra tên món
         name = self.name_input.text().strip()
         if not name:
             return None
             
-        # Get other fields
+        # Lấy các trường khác
         price = self.price_input.value()
         category = self.category_input.currentText().strip()
         description = self.description_input.text().strip()
         
-        # Price validation
+        # Kiểm tra giá
         if price <= 0:
             return None
             
-        # Category validation
+        # Kiểm tra danh mục
         if not category:
             return None
             
@@ -120,7 +120,7 @@ class MenuManagerView(QWidget):
         }
         
     def clear_inputs(self):
-        """Clear all input fields"""
+        """Xóa tất cả dữ liệu trong các trường nhập liệu"""
         self.name_input.clear()
         self.price_input.setValue(20000)
         self.category_input.setCurrentIndex(0)
@@ -130,7 +130,7 @@ class MenuManagerView(QWidget):
         self.delete_button.setEnabled(False)
         
     def load_items(self):
-        """Load menu items into table"""
+        """Tải danh sách món lên bảng"""
         items = self.controller.get_menu_items()
         self.table.load_items(items)
-        self.menu_updated.emit(items)  # Emit signal with updated items
+        self.menu_updated.emit(items)  # Phát tín hiệu kèm danh sách món đã cập nhật

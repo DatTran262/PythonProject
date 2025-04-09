@@ -20,10 +20,9 @@ class MenuManagerController(QObject):
         )
         return item.save()
         
-    def update_menu_item(self, item_id, item_data):
+    def update_menu_item(self, item_data):
         """Update existing menu item"""
         item = MenuItem(
-            id=item_id,
             name=item_data['name'],
             description=item_data['description'],
             price=item_data['price'],
@@ -31,7 +30,7 @@ class MenuManagerController(QObject):
         )
         return item.save()
         
-    def delete_menu_item(self, item_id):
+    def delete_menu_item(self, item_data):
         """Delete menu item"""
-        item = MenuItem(id=item_id)
+        item = MenuItem(id=item_data)
         return item.delete()

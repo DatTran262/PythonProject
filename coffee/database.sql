@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Menu items table
 CREATE TABLE IF NOT EXISTS menu_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(50) NOT NULL,
@@ -68,3 +68,6 @@ CREATE INDEX idx_menu_items_category ON menu_items(category);
 CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_created_at ON orders(created_at);
 CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+
+-- Add UNIQUE constraint to menu_items name if not exists
+ALTER TABLE menu_items ADD UNIQUE INDEX IF NOT EXISTS idx_menu_items_name (name);
