@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStackedWidget, QMessageBox
-from PyQt6.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QStackedWidget, QMessageBox
+from PyQt5.QtCore import pyqtSignal
 from .forgot_password.find_account_page import FindAccountPage
 from .forgot_password.verify_otp_page import VerifyOTPPage
 from .forgot_password.reset_password_page import ResetPasswordPage
@@ -13,6 +13,7 @@ class ForgotPasswordView(QWidget):
     
     def __init__(self):
         super().__init__()
+        self._pages = {}  # Store page instances
         self.init_ui()
         
     def init_ui(self):
@@ -24,34 +25,41 @@ class ForgotPasswordView(QWidget):
         
         # Create stacked widget for pages
         self.stacked_widget = QStackedWidget()
-        
-        # Create pages
-        find_account_page = FindAccountPage()
-        verify_otp_page = VerifyOTPPage()
-        reset_password_page = ResetPasswordPage()
-        
-        # Add pages to stacked widget
-        self.stacked_widget.addWidget(find_account_page)
-        self.stacked_widget.addWidget(verify_otp_page)
-        self.stacked_widget.addWidget(reset_password_page)
-        
         layout.addWidget(self.stacked_widget)
         self.setLayout(layout)
-        
-        # Connect signals
-        find_account_page.find_account.connect(self.find_account)
-        verify_otp_page.verify_otp.connect(self.verify_otp)
-        reset_password_page.reset_password.connect(self.reset_password)
+    
+    def initialize_pages(self):
+        """Initialize pages when needed"""
+        if not self._pages:
+            # Create pages
+            self._pages['find_account'] = FindAccountPage()
+            self._pages['verify_otp'] = VerifyOTPPage()
+            self._pages['reset_password'] = ResetPasswordPage()
+            
+            # Add pages to stacked widget
+            self.stacked_widget.addWidget(self._pages['find_account'])
+            self.stacked_widget.addWidget(self._pages['verify_otp'])
+            self.stacked_widget.addWidget(self._pages['reset_password'])
+            
+            # Connect signals
+            self._pages['find_account'].find_account.connect(self.find_account)
+            self._pages['verify_otp'].verify_otp.connect(self.verify_otp)
+            self._pages['reset_password'].reset_password.connect(self.reset_password)
+    
+    def show(self):
+        """Override show method to initialize pages before showing"""
+        self.initialize_pages()
+        super().show()
         
     def show_otp_page(self):
         """Show the OTP verification page"""
-        self.stacked_widget.widget(1).clear()
-        self.stacked_widget.setCurrentIndex(1)
+        self._pages['verify_otp'].clear()
+        self.stacked_widget.setCurrentWidget(self._pages['verify_otp'])
         
     def show_reset_password_page(self):
         """Show the reset password page"""
-        self.stacked_widget.widget(2).clear()
-        self.stacked_widget.setCurrentIndex(2)
+        self._pages['reset_password'].clear()
+        self.stacked_widget.setCurrentWidget(self._pages['reset_password'])
         
     def show_success(self, message):
         """Show success message"""
@@ -63,6 +71,7 @@ class ForgotPasswordView(QWidget):
         
     def clear_fields(self):
         """Clear all input fields"""
-        for i in range(self.stacked_widget.count()):
-            self.stacked_widget.widget(i).clear()
-        self.stacked_widget.setCurrentIndex(0)
+        if self._pages:
+            for page in self._pages.values():
+                page.clear()
+            self.stacked_widget.setCurrentWidget(self._pages['find_account'])

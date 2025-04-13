@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QMessageBox
-from PyQt6.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QMessageBox
+from PyQt5.QtCore import pyqtSignal
 from .register.register_form import RegisterForm
 from .styles import PRIMARY_BUTTON, SECONDARY_BUTTON, BUTTON_FIXED_WIDTH
 
@@ -14,7 +14,7 @@ class RegisterView(QWidget):
         
     def init_ui(self):
         """Initialize the user interface"""
-        self.setWindowTitle('Coffee Shop Management - Register')
+        self.setWindowTitle('Coffee Shop Management - Đăng ký')
         self.setFixedSize(400, 300)
         
         # Create layouts
@@ -25,11 +25,11 @@ class RegisterView(QWidget):
         self.register_form = RegisterForm()
         
         # Create buttons
-        self.register_button = QPushButton('Register')
+        self.register_button = QPushButton('Đăng ký')
         self.register_button.setFixedWidth(BUTTON_FIXED_WIDTH)
         self.register_button.setStyleSheet(PRIMARY_BUTTON)
         
-        self.back_button = QPushButton('Back to Login')
+        self.back_button = QPushButton('Quay lại đăng nhập')
         self.back_button.setFixedWidth(BUTTON_FIXED_WIDTH)
         self.back_button.setStyleSheet(SECONDARY_BUTTON)
         
@@ -60,11 +60,19 @@ class RegisterView(QWidget):
         data = self.register_form.get_data()
         
         if not data['username'] or not data['password'] or not data['confirm_password']:
-            QMessageBox.warning(self, 'Registration Error', 'Please fill in all fields.')
+            QMessageBox.warning(
+                self, 
+                'Lỗi đăng ký', 
+                'Vui lòng điền đầy đủ thông tin.'
+            )
             return
             
         if data['password'] != data['confirm_password']:
-            QMessageBox.warning(self, 'Registration Error', 'Passwords do not match.')
+            QMessageBox.warning(
+                self, 
+                'Lỗi đăng ký', 
+                'Mật khẩu xác nhận không khớp.'
+            )
             self.register_form.clear_passwords()
             return
             
@@ -80,11 +88,11 @@ class RegisterView(QWidget):
         
     def show_error(self, message):
         """Show error message box"""
-        QMessageBox.critical(self, 'Registration Error', message)
+        QMessageBox.critical(self, 'Lỗi đăng ký', message)
         
     def show_success(self, message):
         """Show success message box"""
-        QMessageBox.information(self, 'Registration Successful', message)
+        QMessageBox.information(self, 'Đăng ký thành công', message)
         
     def clear_fields(self):
         """Clear input fields"""

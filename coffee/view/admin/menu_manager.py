@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                            QLineEdit, QSpinBox, QComboBox, QPushButton, QTextEdit)
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt5.QtCore import pyqtSignal, Qt
 from ..styles import PRIMARY_BUTTON, HEADER_LABEL, DANGER_BUTTON
 from .menu_table import MenuTable
 from .menu_events import MenuEventHandler

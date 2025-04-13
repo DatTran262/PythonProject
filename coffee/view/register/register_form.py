@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit
-from PyQt6.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit
+from PyQt5.QtCore import Qt
 from ..styles import TITLE_LABEL
 
 class RegisterForm(QWidget):
@@ -14,26 +14,26 @@ class RegisterForm(QWidget):
         layout = QVBoxLayout()
         
         # Title
-        title_label = QLabel('Register New Account')
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label = QLabel('Đăng ký tài khoản mới')
+        title_label.setAlignment(Qt.AlignCenter)
         title_label.setStyleSheet(TITLE_LABEL)
         
         # Username input
-        self.username_label = QLabel('Username:')
+        self.username_label = QLabel('Tên đăng nhập:')
         self.username_input = QLineEdit()
-        self.username_input.setPlaceholderText('Enter username')
+        self.username_input.setPlaceholderText('Nhập tên đăng nhập')
         
         # Password input
-        self.password_label = QLabel('Password:')
+        self.password_label = QLabel('Mật khẩu:')
         self.password_input = QLineEdit()
-        self.password_input.setPlaceholderText('Enter password')
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_input.setPlaceholderText('Nhập mật khẩu')
+        self.password_input.setEchoMode(QLineEdit.Password)
         
         # Confirm password input
-        self.confirm_password_label = QLabel('Confirm Password:')
+        self.confirm_password_label = QLabel('Xác nhận mật khẩu:')
         self.confirm_password_input = QLineEdit()
-        self.confirm_password_input.setPlaceholderText('Confirm password')
-        self.confirm_password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.confirm_password_input.setPlaceholderText('Nhập lại mật khẩu')
+        self.confirm_password_input.setEchoMode(QLineEdit.Password)
         
         # Add widgets to layout
         layout.addWidget(title_label)
@@ -43,6 +43,10 @@ class RegisterForm(QWidget):
         layout.addWidget(self.password_input)
         layout.addWidget(self.confirm_password_label)
         layout.addWidget(self.confirm_password_input)
+        
+        # Add some spacing
+        layout.setContentsMargins(20, 20, 20, 10)
+        layout.setSpacing(10)
         
         self.setLayout(layout)
         

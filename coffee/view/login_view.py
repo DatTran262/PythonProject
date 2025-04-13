@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QMessageBox
-from PyQt6.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QMessageBox
+from PyQt5.QtCore import pyqtSignal
 from .login.login_form import LoginForm
 from .styles import (PRIMARY_BUTTON, DANGER_BUTTON, SECONDARY_BUTTON, 
                   WARNING_BUTTON, BUTTON_FIXED_WIDTH)
@@ -30,17 +30,17 @@ class LoginView(QWidget):
         self.login_form = LoginForm()
         
         # Create action buttons
-        self.login_button = QPushButton('Login')
+        self.login_button = QPushButton('Đăng nhập')
         self.login_button.setFixedWidth(BUTTON_FIXED_WIDTH)
         self.login_button.setStyleSheet(PRIMARY_BUTTON)
         
-        self.exit_button = QPushButton('Exit')
+        self.exit_button = QPushButton('Thoát')
         self.exit_button.setFixedWidth(BUTTON_FIXED_WIDTH)
         self.exit_button.setStyleSheet(DANGER_BUTTON)
         
         # Create register section
-        register_label = QLabel("Don't have an account?")
-        self.register_button = QPushButton('Register')
+        register_label = QLabel("Chưa có tài khoản?")
+        self.register_button = QPushButton('Đăng ký')
         self.register_button.setFixedWidth(BUTTON_FIXED_WIDTH)
         self.register_button.setStyleSheet(SECONDARY_BUTTON)
         
@@ -85,21 +85,21 @@ class LoginView(QWidget):
         credentials = self.login_form.get_credentials()
         
         if not credentials['username'] or not credentials['password']:
-            QMessageBox.warning(self, 'Login Error', 'Please enter both username and password.')
+            QMessageBox.warning(self, 'Lỗi đăng nhập', 'Vui lòng nhập tên đăng nhập và mật khẩu.')
             return
             
         self.attempt_login.emit(credentials)
         
     def show_error(self, message):
         """Show error message box"""
-        QMessageBox.critical(self, 'Login Error', message)
+        QMessageBox.critical(self, 'Lỗi đăng nhập', message)
         
     def clear_fields(self):
         """Clear input fields"""
         self.login_form.clear()
         
     def clear_input_login(self):
-        """Clear password field only"""
+        """Clear login fields"""
         self.login_form.username_input.clear()
         self.login_form.password_input.clear()
         self.login_form.username_input.setFocus()
