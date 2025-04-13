@@ -97,3 +97,9 @@ class LoginView(QWidget):
     def clear_fields(self):
         """Clear input fields"""
         self.login_form.clear()
+        
+    def clear_input_login(self):
+        """Clear password field only"""
+        self.login_form.username_input.clear()
+        self.login_form.password_input.clear()
+        self.login_form.username_input.setFocus()

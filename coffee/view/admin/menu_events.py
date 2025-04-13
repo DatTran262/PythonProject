@@ -14,7 +14,7 @@ class MenuEventHandler:
             return
             
         # Cập nhật các trường nhập liệu với dữ liệu của món được chọn
-        # self.view.selected_id = selected_item['id']
+        self.view.selected_id = selected_item['id']
         self.view.name_input.setText(selected_item['name'])
         self.view.price_input.setValue(int(selected_item['price']))
         self.view.category_input.setCurrentText(selected_item['category'])
@@ -60,7 +60,7 @@ class MenuEventHandler:
         
         if reply == QMessageBox.StandardButton.Yes:
             try:
-                if self.view.controller.update_menu_item(self.view.name_input, item_data):
+                if self.view.controller.update_menu_item(self.view.selected_id, item_data):
                     self.view.load_items()
                     self.view.clear_inputs()
                     QMessageBox.information(self.view, 'Thành công', 'Đã cập nhật món.')
@@ -84,10 +84,17 @@ class MenuEventHandler:
         )
         
         if reply == QMessageBox.StandardButton.Yes:
-            if self.view.controller.delete_menu_item(self.view.name_input.text()):
+            if self.view.controller.delete_menu_item(self.view.selected_id):
                 # Tìm và xóa dòng khỏi bảng
                 self.view.load_items()
                 self.view.clear_inputs()
                 QMessageBox.information(self.view, 'Thành công', 'Đã xóa món.')
             else:
                 QMessageBox.critical(self.view, 'Lỗi', 'Không thể xóa món.')
+    
+    def move_to_center(self):
+        """Di chuyển cửa sổ ra giữa màn hình"""
+        frame_gm = self.view.frameGeometry()
+        screen = self.view.screen().availableGeometry().center()
+        frame_gm.moveCenter(screen)
+        self.view.move(frame_gm.topLeft())

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                           QLineEdit, QSpinBox, QComboBox, QPushButton)
-from PyQt6.QtCore import pyqtSignal
+                           QLineEdit, QSpinBox, QComboBox, QPushButton, QTextEdit)
+from PyQt6.QtCore import pyqtSignal, Qt
 from ..styles import PRIMARY_BUTTON, HEADER_LABEL, DANGER_BUTTON
 from .menu_table import MenuTable
 from .menu_events import MenuEventHandler
@@ -18,11 +18,18 @@ class MenuManagerView(QWidget):
         
     def init_ui(self):
         """Khởi tạo giao diện người dùng"""
+        # Đặt kích thước cố định
+        self.setFixedSize(800, 600)
+
+        # Căn giữa cửa sổ
+        self.event_handler.move_to_center()
+
         layout = QVBoxLayout(self)
         
         # Tiêu đề
         title = QLabel('QUẢN LÝ THỰC ĐƠN')
         title.setStyleSheet(HEADER_LABEL)
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)    
         layout.addWidget(title)
         
         # Form nhập liệu
@@ -59,8 +66,17 @@ class MenuManagerView(QWidget):
         layout.addWidget(self.category_input)
         
         # Description input
-        self.description_input = QLineEdit()
+        # self.description_input = QLineEdit()
+        # self.description_input.setPlaceholderText('Mô tả món')
+        # self.description_input.setMinimumHeight(30)
+        # layout.addWidget(QLabel('Mô tả:'))
+        # layout.addWidget(self.description_input)
+
+        # Description input
+        self.description_input = QTextEdit()
         self.description_input.setPlaceholderText('Mô tả món')
+        self.description_input.setFixedHeight(30)  # Tùy chỉnh
+        self.description_input.setLineWrapMode(QTextEdit.LineWrapMode.WidgetWidth)
         layout.addWidget(QLabel('Mô tả:'))
         layout.addWidget(self.description_input)
 
@@ -102,7 +118,7 @@ class MenuManagerView(QWidget):
         # Lấy các trường khác
         price = self.price_input.value()
         category = self.category_input.currentText().strip()
-        description = self.description_input.text().strip()
+        description = self.description_input.toPlainText().strip()
         
         # Kiểm tra giá
         if price <= 0:

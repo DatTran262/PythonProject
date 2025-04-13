@@ -1,17 +1,22 @@
 from PyQt6.QtWidgets import (QTableWidget, QTableWidgetItem, QPushButton,
-                           QHeaderView, QMessageBox)
+                           QHeaderView, QMessageBox, QAbstractItemView)
 from ..styles import DANGER_BUTTON
 
 class MenuTable(QTableWidget):
     def __init__(self, parent=None):
-        super().__init__(0, 5, parent)
+        super().__init__(0, 4, parent)
         self.init_ui()
         
     def init_ui(self):
         """Khởi tạo bảng"""
-        self.setHorizontalHeaderLabels(['Tên', 'Giá', 'Danh mục', 'Thao tác'])
+        self.setHorizontalHeaderLabels(['Tên', 'Giá', 'Danh mục', 'Mô tả'])
+        # self.setColumnWidth(0, 200)
+        self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         header = self.horizontalHeader()
-        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
         
     def load_items(self, items):
         """Tải danh sách món vào bảng"""
@@ -23,15 +28,12 @@ class MenuTable(QTableWidget):
             self.insertRow(row)
             
             # Thêm thông tin món
-            self.setItem(row, 0, QTableWidgetItem(item['name']))
+            name_item = QTableWidgetItem(item['name'])
+            name_item.setData(1000, item['id'])  # Lưu ID vào trong item với role tùy chỉnh
+            self.setItem(row, 0, name_item)
             self.setItem(row, 1, QTableWidgetItem(f"${item['price']:.2f}"))
             self.setItem(row, 2, QTableWidgetItem(item['category']))
-            
-            # Thêm nút xóa
-            delete_btn = QPushButton('Xóa')
-            delete_btn.setStyleSheet(DANGER_BUTTON)
-            delete_btn.clicked.connect(lambda ch, i=item['id']: self.confirm_delete(i))
-            self.setCellWidget(row, 3, delete_btn)
+            self.setItem(row, 3, QTableWidgetItem(item['description']))
             
     def confirm_delete(self, item_data):
         """Xác nhận và xóa món"""
@@ -68,8 +70,10 @@ class MenuTable(QTableWidget):
         if row < 0:
             return None
             
+        name_item = self.item(row, 0)
         return {
-            'name': self.item(row, 0).text(),
+            'id': name_item.data(1000),  # Lấy ID đã lưu
+            'name': name_item.text(),
             'price': float(self.item(row, 1).text().replace('$', '')),
             'category': self.item(row, 2).text()
         }

@@ -23,8 +23,8 @@ class MenuRepository:
         db = Database()
         
         # Kiểm tra trùng tên
-        if MenuRepository.check_duplicate_name(item_dict['name'], item_id):
-            raise ValueError("Tên món đã tồn tại")
+        # if MenuRepository.check_duplicate_name(item_dict['name'], item_id):
+        #     raise ValueError("Tên món đã tồn tại")
             
         try:
             if item_id:  # Cập nhật món đã tồn tại

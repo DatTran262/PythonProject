@@ -18,11 +18,15 @@ class MenuManagerController(QObject):
             price=item_data['price'],
             category=item_data['category']
         )
-        return item.save()
+        if item_data['name'] in [i['name'] for i in MenuItem.get_all_items()]:
+            raise ValueError("Món đã tồn tại!")
+        else:
+            return item.save()
         
-    def update_menu_item(self, item_data):
+    def update_menu_item(self, item_id, item_data):
         """Update existing menu item"""
         item = MenuItem(
+            id=item_id,
             name=item_data['name'],
             description=item_data['description'],
             price=item_data['price'],

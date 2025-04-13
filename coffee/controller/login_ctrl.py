@@ -33,8 +33,7 @@ class LoginController(QObject):
             return True
         else:
             self.view.show_error("Invalid username or password")
-            self.view.password_input.clear()
-            self.view.password_input.setFocus()
+            self.view.clear_input_login()
             return False
 
     def show_forgot_password(self):
